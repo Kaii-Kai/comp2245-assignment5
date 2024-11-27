@@ -11,25 +11,32 @@ try{
 	if (isset($_GET['country'])) {
 		$country = $_GET['country'];
 		
-	$stmt = $conn->prepare("SELECT * FROM countries WHERE name LIKE '%$country%'");
-	$stmt->execute();
+		$stmt = $conn->prepare("SELECT * FROM countries WHERE name LIKE '%$country%'");
+		$stmt->execute();
 
-	$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-	} else {
-		$results = [];
+		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		
+		if (results) {
+			echo "<table>";
+			echo "<tr>
+					<th>Country Name</th>
+					<th>Continent</th>
+					<th>Independence Year</th>
+					<th>Head of State</th>
+				</tr>";
+			
+			foreach ($results as $row) {
+				echo "<tr>
+						<td>".htmlspecialchars(row['name']). "</td>
+						<td>".htmlspecialchars(row['continent']). "</td>
+						<td>".htmlspecialchars(row['independence_year']). "</td>
+						<td>".htmlspecialchars(row['head_of_state']). "</td>
+					</tr>";
+			}
+			echo "</table>";
+		}
 	}
 } catch (Exception $e) {
 	die($e -> getMessage());
 }
-
-
 ?>
-<ul>
-<?php if (!empty($results)):?>
-	<?php foreach ($results as $row): ?>
-		<li><?= htmlspecialchars($row['name']) . ' is ruled by ' . htmlspecialchars($row['head_of_state']); ?></li>
-	<?php endforeach; ?>
-<?php else: ?>
-	<li>No results found.</li>
-<?php endif; ?>
-</ul>
